@@ -73,7 +73,7 @@ end
 _G.Roooor_playSound = playToggleSound
 
 -- =========================================================
--- LOADING GALAXY (SIMPLE)
+-- LOADING GALAXY
 -- =========================================================
 local loadingGui = Instance.new("ScreenGui")
 loadingGui.Name = "OneWLoading"
@@ -638,7 +638,6 @@ SkipAnims = {
     ["127096285501517"] = "Parry Anim",
 }
 
--- GRAFIK PRESETS (Soft Cinematic 16)
 GraphicPresets = {
     ["Soft"] = { Brightness = 2.00, Exposure = 0.03, ShadowSoftness = 0.075, Ambient = Color3.fromRGB(42,45,52), OutdoorAmbient = Color3.fromRGB(130,138,155), AtmosphereDensity = 0.055, AtmosphereHaze = 0.025, AtmosphereGlare = 0.08, BloomIntensity = 0.12, BloomSize = 20, BloomThreshold = 0.96, Contrast = 0.18, Saturation = 0.08, ColorBrightness = 0.01, SunRaysIntensity = 0.06, SunRaysSpread = 0.75, DOFNear = 0.01, DOFFar = 0.02, DOFFocus = 45, DOFRadius = 40 },
     ["Cinematic"] = { Brightness = 2.10, Exposure = 0.05, ShadowSoftness = 0.055, Ambient = Color3.fromRGB(32,35,42), OutdoorAmbient = Color3.fromRGB(125,132,150), AtmosphereDensity = 0.075, AtmosphereHaze = 0.045, AtmosphereGlare = 0.12, BloomIntensity = 0.18, BloomSize = 24, BloomThreshold = 0.92, Contrast = 0.24, Saturation = 0.10, ColorBrightness = 0.015, SunRaysIntensity = 0.085, SunRaysSpread = 0.72, DOFNear = 0.025, DOFFar = 0.045, DOFFocus = 45, DOFRadius = 35 },
@@ -1553,7 +1552,6 @@ function GraphicReset()
     Lighting.ClockTime = GraphicState.Time
 end
 
--- SHARPGRAPH LOGIC
 function SharpCreateEffect(className, name)
     local old = Lighting:FindFirstChild(name)
     if old and old.ClassName == className then
@@ -2398,7 +2396,7 @@ task.spawn(function()
 end)
 
 -- =========================================================
--- AIMBOT SENTER (COPY DARI SC FALLENS)
+-- AIMBOT SENTER (VERSI BARU - DARI ONE W SIMPLE)
 -- =========================================================
 AimbotLaserGui = nil
 AimbotLaserLines = {}
@@ -2416,15 +2414,14 @@ CreateLaserGui()
 function AimbotSenter_IsKiller(p)
     if not p or not p.Character then return false end
     if p.Team and p.Team.Name == "Killer" then return true end
-    local charName = string.lower(p.Character.Name)
-    local dispName = string.lower(p.DisplayName or "")
-    for _, tag in ipairs({"killer","hidden","abyss","walker","masked","jacket","617","jason","hunter","slasher"}) do
-        if charName:find(tag) or dispName:find(tag) then return true end
+    local n = string.lower(p.Character.Name)
+    local d = string.lower(p.DisplayName or "")
+    for _, tag in ipairs({"killer","hidden","abyss","walker","masked","jacket","617","slasher","hunter"}) do
+        if n:find(tag) or d:find(tag) then return true end
     end
     return false
 end
 
--- PATH TOMBOL SENTER (DARI FALLENS)
 function GetGunAimButton()
     local current = PG
     for segment in string.gmatch("Survivor-mob.Controls.Gui-mob", "[^%.]+") do
@@ -2490,7 +2487,7 @@ function GetClosestKillerTarget()
     local shortest = 999999
     for _, p in pairs(Players:GetPlayers()) do
         if p ~= LP and p.Character and AimbotSenter_IsKiller(p) then
-            local hrp = p.Character:FindFirstChild(AimbotSenter.LockPart or "Head")
+            local hrp = p.Character:FindFirstChild("Head")
             local hum = p.Character:FindFirstChildOfClass("Humanoid")
             if hrp and hum and hum.Health > 0 then
                 local pos, visible = cam:WorldToViewportPoint(hrp.Position)
@@ -2575,7 +2572,7 @@ task.spawn(function()
 end)
 
 -- =========================================================
--- FAST VAULT (COPY DARI SC FALLENS)
+-- FAST VAULT
 -- =========================================================
 FastVaultTracks = {}
 
@@ -3526,38 +3523,84 @@ local ok = pcall(function() gui.Parent = game:GetService("CoreGui") end)
 if not ok then gui.Parent = PG end
 
 -- =========================================================
--- TOMBOL TOGGLE "W"
+-- TOMBOL TOGGLE "W" - GLOW GOLD + ANIMASI
 -- =========================================================
 btnContainer = Instance.new("TextButton")
-btnContainer.Size = UDim2.fromOffset(52, 52)
+btnContainer.Size = UDim2.fromOffset(56, 56)
 btnContainer.Position = UDim2.fromOffset(20, 120)
 btnContainer.BackgroundColor3 = C.PANEL
 btnContainer.Text = "W"
 btnContainer.TextColor3 = C.GOLD
-btnContainer.TextSize = 22
+btnContainer.TextSize = 24
 btnContainer.Font = Enum.Font.GothamBlack
 btnContainer.BorderSizePixel = 0
 btnContainer.AutoButtonColor = false
 btnContainer.Active = true
+btnContainer.ZIndex = 10
 btnContainer.Parent = gui
 rnd(btnContainer, 999)
+
+local ring1 = Instance.new("Frame")
+ring1.Size = UDim2.new(1, 8, 1, 8)
+ring1.Position = UDim2.new(0, -4, 0, -4)
+ring1.BackgroundTransparency = 1
+ring1.ZIndex = -1
+ring1.Parent = btnContainer
+rnd(ring1, 999)
+
+local ring1Stroke = Instance.new("UIStroke")
+ring1Stroke.Thickness = 2.5
+ring1Stroke.Color = C.GOLD
+ring1Stroke.Transparency = 0.1
+ring1Stroke.Parent = ring1
+
+local ring1Grad = Instance.new("UIGradient")
+ring1Grad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, C.GOLD),
+    ColorSequenceKeypoint.new(0.5, C.GOLD_LIGHT),
+    ColorSequenceKeypoint.new(1, C.ORANGE),
+})
+ring1Grad.Parent = ring1Stroke
+
+local ring2 = Instance.new("Frame")
+ring2.Size = UDim2.new(1, 4, 1, 4)
+ring2.Position = UDim2.new(0, -2, 0, -2)
+ring2.BackgroundTransparency = 1
+ring2.ZIndex = -1
+ring2.Parent = btnContainer
+rnd(ring2, 999)
+
+local ring2Stroke = Instance.new("UIStroke")
+ring2Stroke.Thickness = 1.5
+ring2Stroke.Color = C.GOLD_LIGHT
+ring2Stroke.Transparency = 0.4
+ring2Stroke.Parent = ring2
+
+local ring2Grad = Instance.new("UIGradient")
+ring2Grad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, C.GOLD_LIGHT),
+    ColorSequenceKeypoint.new(0.5, C.ORANGE),
+    ColorSequenceKeypoint.new(1, C.GOLD),
+})
+ring2Grad.Rotation = 180
+ring2Grad.Parent = ring2Stroke
+
+local tGlow = Instance.new("UIStroke")
+tGlow.Color = C.GOLD_LIGHT
+tGlow.Thickness = 8
+tGlow.Transparency = 0.75
+tGlow.Parent = btnContainer
+
+local tGlow2 = Instance.new("UIStroke")
+tGlow2.Color = C.ORANGE
+tGlow2.Thickness = 12
+tGlow2.Transparency = 0.88
+tGlow2.Parent = btnContainer
 
 local tStroke = Instance.new("UIStroke")
 tStroke.Thickness = 2
 tStroke.Color = C.GOLD
 tStroke.Parent = btnContainer
-
-local tGlow = Instance.new("UIStroke")
-tGlow.Color = C.GOLD_LIGHT
-tGlow.Thickness = 6
-tGlow.Transparency = 0.7
-tGlow.Parent = btnContainer
-
-local tGlow2 = Instance.new("UIStroke")
-tGlow2.Color = C.ORANGE
-tGlow2.Thickness = 10
-tGlow2.Transparency = 0.85
-tGlow2.Parent = btnContainer
 
 local tGrad = Instance.new("UIGradient")
 tGrad.Color = ColorSequence.new(C.GOLD_DARK, C.GOLD, C.GOLD_LIGHT, C.GOLD, C.GOLD_DARK)
@@ -3568,25 +3611,29 @@ task.spawn(function()
     local t = 0
     while btnContainer.Parent do
         t = t + 0.03
-        tGrad.Rotation = (t * 40) % 360
-        tGlow.Transparency = 0.7 - math.abs(math.sin(t * 2)) * 0.4
-        tGlow2.Transparency = 0.85 - math.abs(math.sin(t * 1.5)) * 0.3
-        btnContainer.TextColor3 = C.GOLD:Lerp(C.GOLD_LIGHT, math.abs(math.sin(t * 2)))
-        btnContainer.TextSize = 22 + math.sin(t * 3) * 1.5
+        ring1.Rotation = t * 45
+        ring2.Rotation = -t * 60
+        ring1Grad.Rotation = t * 90
+        ring2Grad.Rotation = -t * 120
+        tGlow.Transparency = 0.75 - math.abs(math.sin(t * 2)) * 0.4
+        tGlow2.Transparency = 0.88 - math.abs(math.sin(t * 1.5)) * 0.35
         tStroke.Transparency = 0.1 + math.abs(math.sin(t * 2.5)) * 0.3
+        btnContainer.TextColor3 = C.GOLD:Lerp(C.GOLD_LIGHT, math.abs(math.sin(t * 2)))
+        btnContainer.TextSize = 24 + math.sin(t * 3) * 1.5
+        tGrad.Rotation = (t * 30) % 360
         task.wait(0.03)
     end
 end)
 
 btnContainer.MouseEnter:Connect(function()
     TweenService:Create(btnContainer, TweenInfo.new(0.15), {
-        Size = UDim2.fromOffset(58, 58)
+        Size = UDim2.fromOffset(64, 64)
     }):Play()
 end)
 
 btnContainer.MouseLeave:Connect(function()
     TweenService:Create(btnContainer, TweenInfo.new(0.15), {
-        Size = UDim2.fromOffset(52, 52)
+        Size = UDim2.fromOffset(56, 56)
     }):Play()
 end)
 
@@ -3610,7 +3657,6 @@ bgGrad.Color = ColorSequence.new(C.BG, C.BG2, C.BG)
 bgGrad.Rotation = 135
 bgGrad.Parent = panel
 
--- HEADER
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 52)
 header.BackgroundColor3 = C.PANEL
@@ -3694,9 +3740,7 @@ closeBtn.Parent = header
 rnd(closeBtn, 6)
 strk(closeBtn, C.RED, 1, 0.4)
 
--- =========================================================
--- TAB BAR (DENGAN JARAK/PADDING)
--- =========================================================
+-- TAB BAR + TAB JARAK
 tabBar = Instance.new("Frame")
 tabBar.Size = UDim2.new(1, -20, 0, 42)
 tabBar.Position = UDim2.new(0, 10, 0, 60)
@@ -3720,18 +3764,16 @@ tabScroll.Parent = tabBar
 
 local tabLayout = Instance.new("UIListLayout")
 tabLayout.FillDirection = Enum.FillDirection.Horizontal
-tabLayout.Padding = UDim.new(0, 10)  -- JARAK antar tab (dari 4 jadi 10)
+tabLayout.Padding = UDim.new(0, 10)
 tabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 tabLayout.Parent = tabScroll
 
 local tabPadding = Instance.new("UIPadding")
-tabPadding.PaddingLeft = UDim.new(0, 6)   -- PADDING kiri
-tabPadding.PaddingRight = UDim.new(0, 6)  -- PADDING kanan
+tabPadding.PaddingLeft = UDim.new(0, 6)
+tabPadding.PaddingRight = UDim.new(0, 6)
 tabPadding.Parent = tabScroll
 
--- =========================================================
--- CONTENT AREA (2 KOLOM)
--- =========================================================
+-- CONTENT AREA
 contentFrame = Instance.new("Frame")
 contentFrame.Size = UDim2.new(1, -20, 1, -115)
 contentFrame.Position = UDim2.new(0, 10, 0, 107)
@@ -3790,9 +3832,7 @@ rightLayout.Parent = rightScroll
 cs = leftScroll
 _G.Roooor_cs = cs
 
--- =========================================================
 -- DRAG PANEL
--- =========================================================
 dragging = false
 dragStart = nil
 startPos = nil
@@ -3824,7 +3864,6 @@ UIS.InputEnded:Connect(function(input)
     end
 end)
 
--- DRAG TOGGLE BUTTON
 btnDragging = false
 btnDragStart = nil
 btnStartPos = nil
@@ -3914,7 +3953,7 @@ UIS.InputBegan:Connect(function(input, gpe)
     end
 end)
 
-print("✅ [6/15] ONE W - GUI Header + Tombol W + Panel + Tab Jarak")-- =========================================================
+print("✅ [6/15] ONE W - GUI + Tombol W Glow Gold + Panel + Tab Jarak")-- =========================================================
 -- SECTION 7/15 : KOMPONEN + TAB SURVIVOR/KILLER
 -- =========================================================
 
@@ -4260,7 +4299,7 @@ activeTab = nil
 
 function makeTab(name, icon, order, leftCb, rightCb)
     local b = Instance.new("TextButton")
-    b.Size = UDim2.fromOffset(90, 32)  -- Ukuran lebih lebar (dari 80x30 jadi 90x32)
+    b.Size = UDim2.fromOffset(90, 32)
     b.BackgroundColor3 = C.BG
     b.BackgroundTransparency = 1
     b.Text = ""
@@ -4272,7 +4311,7 @@ function makeTab(name, icon, order, leftCb, rightCb)
 
     local ico = Instance.new("TextLabel")
     ico.Size = UDim2.new(0, 22, 1, 0)
-    ico.Position = UDim2.new(0, 10, 0, 0)  -- Padding kiri (dari 8 jadi 10)
+    ico.Position = UDim2.new(0, 10, 0, 0)
     ico.BackgroundTransparency = 1
     ico.Text = icon
     ico.TextColor3 = C.DIM
@@ -4283,7 +4322,7 @@ function makeTab(name, icon, order, leftCb, rightCb)
 
     local lblT = Instance.new("TextLabel")
     lblT.Size = UDim2.new(1, -34, 1, 0)
-    lblT.Position = UDim2.new(0, 30, 0, 0)  -- Geser kanan (dari 26 jadi 30)
+    lblT.Position = UDim2.new(0, 30, 0, 0)
     lblT.BackgroundTransparency = 1
     lblT.Text = string.upper(name)
     lblT.TextColor3 = C.DIM
@@ -4328,9 +4367,7 @@ _G.Roooor_btn = btn
 _G.Roooor_drp = drp
 _G.Roooor_makeTab = makeTab
 
--- =========================================================
--- TAB 1: SURVIVOR (Aimbot Senter DIHAPUS — pindah ke Tab Aimbot)
--- =========================================================
+-- TAB 1: SURVIVOR (Aimbot Senter DIHAPUS - pindah ke Tab Aimbot)
 makeTab("Survivor", "🏃", 1, function()
     sec("Auto Parry", "🛡️")
     tog("Enable Auto Parry", false, function(s)
@@ -4368,9 +4405,6 @@ makeTab("Survivor", "🏃", 1, function()
     end)
     drp("Mode", {"Perfect", "Instant"}, "Perfect", function(v)
         SkillCheck.Mode = v
-    end)
-    tog("Hide Needle", false, function(s)
-        SkillCheck.HideNeedle = s
     end)
     btn("Reset Counter", function()
         SkillCheck.Success = 0
@@ -4428,9 +4462,7 @@ makeTab("Survivor", "🏃", 1, function()
     end)
 end, nil)
 
--- =========================================================
 -- TAB 2: KILLER
--- =========================================================
 makeTab("Killer", "🔪", 2, function()
     sec("Auto Attack", "⚔️")
     tog("Killer Auto Attack", false, function(s) S.Killer_AutoAtk = s end)
@@ -4464,13 +4496,11 @@ end, function()
     end, rightScroll)
 end)
 
-print("✅ [7/15] ONE W - Komponen + Tab Survivor/Killer (Aimbot Senter pindah ke Tab Aimbot)")-- =========================================================
+print("✅ [7/15] ONE W - Komponen + Tab Survivor/Killer")-- =========================================================
 -- SECTION 8/15 : TAB UI PART 2
 -- =========================================================
 
--- =========================================================
 -- TAB 3: ESP
--- =========================================================
 makeTab("ESP", "👁️", 3, function()
     sec("Player ESP", "🟢")
     tog("ESP Survivor", true, function(s) ESP.Survivor = s end)
@@ -4521,9 +4551,7 @@ end, function()
     end, rightScroll)
 end)
 
--- =========================================================
 -- TAB 4: FIRE
--- =========================================================
 makeTab("Fire", "🔥", 4, function()
     sec("Fire Control", "⚙️")
     tog("Enable Fire", false, function(s)
@@ -4585,9 +4613,7 @@ end, function()
     end
 end)
 
--- =========================================================
 -- TAB 5: MOONWALK
--- =========================================================
 makeTab("Moonwalk", "🕺", 5, function()
     sec("Moonwalk", "🕺")
     tog("Enable Moonwalk", false, function(s)
@@ -4614,9 +4640,7 @@ end, function()
     tog("Use Slow Speed", true, function(s) Moonwalk.UseSlow = s end, rightScroll)
 end)
 
--- =========================================================
 -- TAB 6: MISC
--- =========================================================
 makeTab("Misc", "⚙️", 6, function()
     sec("Movement", "🏃")
     tog("Walk Speed", false, function(s) S.WalkSpeed = s end)
@@ -4637,12 +4661,6 @@ makeTab("Misc", "⚙️", 6, function()
         S.FOV = 120; S.FOVEnabled = true; applyFOV()
     end)
 
-    sec("Character", "🎭")
-    tog("Headless", true, function(s)
-        S.Headless = s
-        applyHeadless(s)
-    end)
-
     sec("Utility", "🛠️")
     tog("Anti-AFK", false, function(s)
         S.AntiAFK = s
@@ -4661,9 +4679,7 @@ end, function()
     btn("Rejoin Server", function() rejoinServer() end, rightScroll)
 end)
 
--- =========================================================
--- TAB 7: VISUAL (Headless pindah ke sini, di atas Korblox)
--- =========================================================
+-- TAB 7: VISUAL (Headless di sini, di atas Korblox)
 makeTab("Visual", "✨", 7, function()
     sec("Fullbright & No Fog", "💡")
     tog("Fullbright", false, function(s)
@@ -4702,12 +4718,11 @@ makeTab("Visual", "✨", 7, function()
     sl("Saturation", 0, 1, 0.2, function(v) S.SaturationVal = v; applyContrast() end)
 
     sec("Character", "🎭")
-    -- HEADLESS PINDAH KE SINI (di atas Korblox)
+    -- HEADLESS DI SINI (di atas Korblox)
     tog("Headless", true, function(s)
         S.Headless = s
         applyHeadless(s)
     end)
-    -- KORBLOX di bawah Headless
     tog("Enable Korblox", true, function(s)
         S.Korblox = s
         applyKorblox(s, "Pencil", S.KorbloxYOffset, S.KorbloxScale)
@@ -4816,9 +4831,7 @@ end, function()
     end, rightScroll)
 end)
 
--- =========================================================
--- TAB 8: GRAFIK ULTRA (Soft Cinematic + SharpGraph)
--- =========================================================
+-- TAB 8: GRAFIK ULTRA
 makeTab("Grafik Ultra", "🎬", 8, function()
     sec("Soft Cinematic", "🎬")
     tog("Soft Cinematic", false, function(s)
@@ -4857,21 +4870,11 @@ makeTab("Grafik Ultra", "🎬", 8, function()
     end)
 end, function()
     sec("SharpGraph Preset", "⚡", rightScroll)
-    btn("🚀 ANTI LAG 10", function()
-        SharpApplyAntiLag10()
-    end, rightScroll)
-    btn("🎯 TAJAM MAX (KINCLONG)", function()
-        SharpApplyTajamMax()
-    end, rightScroll)
-    btn("⚖️ BALANCE", function()
-        SharpApplyBalance()
-    end, rightScroll)
-    btn("✨ HD SHARP", function()
-        SharpApplyHDSharp()
-    end, rightScroll)
-    btn("🔥 ULTRA HD 10", function()
-        SharpApplyUltraHD10()
-    end, rightScroll)
+    btn("🚀 ANTI LAG 10", function() SharpApplyAntiLag10() end, rightScroll)
+    btn("🎯 TAJAM MAX (KINCLONG)", function() SharpApplyTajamMax() end, rightScroll)
+    btn("⚖️ BALANCE", function() SharpApplyBalance() end, rightScroll)
+    btn("✨ HD SHARP", function() SharpApplyHDSharp() end, rightScroll)
+    btn("🔥 ULTRA HD 10", function() SharpApplyUltraHD10() end, rightScroll)
 
     sec("Soft Cinematic Preset (16)", "🎬", rightScroll)
     for _, presetName in ipairs(GraphicPresetOrder) do
@@ -4983,28 +4986,39 @@ UIS.InputBegan:Connect(function(input, gpe)
     end
 end)
 
+-- =========================================================
+-- FIX CAMERA LOCK SETELAH PARRY/DOWN/RAGDOLL
+-- =========================================================
 AP_LastCamFix = 0
 
 task.spawn(function()
-    while task.wait(0.05) do
+    while task.wait(0.03) do
         local cam = workspace.CurrentCamera
         local char = LP.Character
         if not cam or not char then continue end
 
         local hum = char:FindFirstChildOfClass("Humanoid")
-        if not hum or hum.Health <= 0 then continue end
+        if not hum then continue end
 
         if AimbotSenter.Enabled and AimbotSenter.HoldingSenter then continue end
         if GuiService.SelectedObject then continue end
 
         local needFix = false
+
         if cam.CameraType ~= Enum.CameraType.Custom then needFix = true end
         if cam.CameraSubject ~= hum then needFix = true end
 
         local state = hum:GetState()
         if state == Enum.HumanoidStateType.FallingDown
             or state == Enum.HumanoidStateType.Ragdoll
-            or state == Enum.HumanoidStateType.PlatformStanding then
+            or state == Enum.HumanoidStateType.PlatformStanding
+            or state == Enum.HumanoidStateType.Physics then
+            needFix = true
+        end
+
+        if char:GetAttribute("Downed") == true
+            or char:GetAttribute("IsDown") == true
+            or char:GetAttribute("Knocked") == true then
             needFix = true
         end
 
@@ -5023,6 +5037,7 @@ task.spawn(function()
     end
 end)
 
+-- Force unlock kamera setelah parry anim
 local function hookKillerParryAnim(char)
     local hum = char:FindFirstChildOfClass("Humanoid")
     if not hum then return end
@@ -5072,6 +5087,7 @@ Players.PlayerAdded:Connect(function(p)
     end)
 end)
 
+-- ANTI-ILANG MENU
 local function forceAllGuiResetOnSpawnFalse()
     for _, g in ipairs(PG:GetChildren()) do
         if g:IsA("ScreenGui") then
@@ -5170,17 +5186,14 @@ task.spawn(function()
     while task.wait(2) do
         if AimbotSenter.Enabled then
             local btn = GetGunAimButton()
-            if btn then
-                -- Auto hook kalau tombol ganti
-                if btn ~= AimbotSenter.CurrentGunButton then
-                    AimbotSenter.CurrentGunButton = btn
-                end
+            if btn and btn ~= AimbotSenter.CurrentGunButton then
+                AimbotSenter.CurrentGunButton = btn
             end
         end
     end
 end)
 
-print("✅ [9/15] ONE W - Keybind + Camera Fix + Anti-Ilang")-- =========================================================
+print("✅ [9/15] ONE W - Keybind + Camera Fix Full + Anti-Ilang")-- =========================================================
 -- SECTION 10/15 : LOGIC FITUR BARU + LOOP TAMBAHAN
 -- =========================================================
 
@@ -5286,7 +5299,7 @@ task.spawn(function()
     end
 end)
 
--- FAST VAULT HOOK (DARI FALLENS)
+-- FAST VAULT HOOK
 LP.CharacterAdded:Connect(function(char)
     task.wait(1)
     if FastVault.Enabled then
@@ -5628,9 +5641,7 @@ function Aimlock_StopLoop()
     end
 end
 
--- =========================================================
 -- FLOATING GUI (Aimlock)
--- =========================================================
 Aimlock_Gui = nil
 Aimlock_FloatingBtn = nil
 Aimlock_FloatingPanel = nil
@@ -5737,9 +5748,7 @@ function Aimlock_RemoveFloatingGUI()
     end
 end
 
--- =========================================================
--- TAB AIMBOT (GABUNG: Aimbot Killer + Aimbot Senter)
--- =========================================================
+-- TAB AIMBOT (GABUNG 2 AIMBOT)
 makeTab("Aimbot", "🎯", 9, function()
     sec("Aimbot Killer (Aimlock)", "🗡️")
     tog("Enable Aimbot Killer", false, function(s)
@@ -5793,7 +5802,7 @@ end, function()
         else
             Aimlock_RemoveFloatingGUI()
         end
-    end)
+    end, rightScroll)
     btn("Scan Attack Buttons", function()
         Aimlock_ScanAttackButtons()
     end, rightScroll)
@@ -5812,7 +5821,7 @@ end, function()
     infoLbl.Parent = rightScroll
 end)
 
-print("✅ [12/15] ONE W - TAB AIMBOT Loaded (Aimbot Killer + Aimbot Senter)")-- =========================================================
+print("✅ [12/15] ONE W - TAB AIMBOT Loaded (Killer + Senter)")-- =========================================================
 -- SECTION 13/15 : ANTI-ILANG + RECOVERY
 -- =========================================================
 
@@ -6091,7 +6100,7 @@ end)
 print("✅ [14/15] ONE W - Final Fix Loaded")-- =========================================================
 -- SECTION 15/15 : AUTO-ON FITUR + PRINT FINAL
 -- =========================================================
--- NOTE: Aimbot Senter logic ada di Section 4 (1 handler)
+-- NOTE: Aimbot Senter logic ada di Section 4
 -- NOTE: Aimbot Killer (Aimlock) logic ada di Section 12
 
 task.spawn(function()
@@ -6168,7 +6177,7 @@ print("║      7. Visual     (Headless, Korblox)   ║")
 print("║      8. Grafik Ultra (Soft + Sharp)      ║")
 print("║      9. Aimbot     (Killer + Senter)     ║")
 print("╠══════════════════════════════════════════╣")
-print("║   🔦 Aimbot Senter: HOLD = LOCK (Fallens)║")
+print("║   🔦 Aimbot Senter: HOLD = LOCK          ║")
 print("║   🎯 Aimbot Killer: HOLD attack = LOCK   ║")
 print("║   🎬 Grafik Ultra: Kinclong + Ringan     ║")
 print("║   💰 Theme: GOLD PREMIUM                 ║")
