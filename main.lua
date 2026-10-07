@@ -1,5 +1,5 @@
 -- =========================================================
--- SECTION 1/15 : LOADING ENERGY + CONFIG + STATE (ONE W GOLD)
+-- SECTION 1/15 : LOADING GALAXY + CONFIG + STATE (ONE W GOLD)
 -- =========================================================
 
 Players = game:GetService("Players")
@@ -73,10 +73,10 @@ end
 _G.Roooor_playSound = playToggleSound
 
 -- =========================================================
--- LOADING ENERGY GOLD
+-- LOADING GALAXY (SIMPLE)
 -- =========================================================
 local loadingGui = Instance.new("ScreenGui")
-loadingGui.Name = "OneWLoadingEnergy"
+loadingGui.Name = "OneWLoading"
 loadingGui.ResetOnSpawn = false
 loadingGui.IgnoreGuiInset = true
 loadingGui.DisplayOrder = 999999
@@ -84,309 +84,299 @@ loadingGui.Parent = PG
 
 local bg = Instance.new("Frame")
 bg.Size = UDim2.new(1, 0, 1, 0)
-bg.BackgroundColor3 = Color3.fromRGB(5, 3, 0)
+bg.BackgroundColor3 = Color3.fromRGB(8, 6, 2)
 bg.BorderSizePixel = 0
 bg.Parent = loadingGui
 
-local bgRadial = Instance.new("Frame")
-bgRadial.Size = UDim2.new(1, 0, 1, 0)
-bgRadial.BackgroundColor3 = Color3.fromRGB(30, 20, 5)
-bgRadial.BorderSizePixel = 0
-bgRadial.BackgroundTransparency = 0.6
-bgRadial.Parent = bg
+local nebula = Instance.new("Frame")
+nebula.Size = UDim2.new(1, 0, 1, 0)
+nebula.BackgroundColor3 = Color3.fromRGB(35, 25, 5)
+nebula.BorderSizePixel = 0
+nebula.BackgroundTransparency = 0.3
+nebula.Parent = bg
 
-local bgRadGrad = Instance.new("UIGradient")
-bgRadGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(60, 40, 10)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(20, 15, 5)),
-    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(5, 3, 0)),
+local nebulaGrad = Instance.new("UIGradient")
+nebulaGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(180, 130, 20)),
+    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(60, 45, 10)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 200, 80)),
+    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(80, 60, 15)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(200, 150, 30)),
 })
-bgRadGrad.Rotation = 90
-bgRadGrad.Parent = bgRadial
-
--- 3 RING MUTER
-local ringHolder = Instance.new("Frame")
-ringHolder.Size = UDim2.new(0, 500, 0, 500)
-ringHolder.Position = UDim2.new(0.5, -250, 0.5, -250)
-ringHolder.BackgroundTransparency = 1
-ringHolder.Parent = bg
-
-local ring1 = Instance.new("Frame")
-ring1.Size = UDim2.new(0, 400, 0, 400)
-ring1.Position = UDim2.new(0.5, -200, 0.5, -200)
-ring1.BackgroundTransparency = 1
-ring1.Parent = ringHolder
-rnd(ring1, 999)
-local ring1Stroke = Instance.new("UIStroke")
-ring1Stroke.Thickness = 4
-ring1Stroke.Color = C.GOLD
-ring1Stroke.Transparency = 0.3
-ring1Stroke.Parent = ring1
-local ring1Grad = Instance.new("UIGradient")
-ring1Grad.Color = ColorSequence.new({C.GOLD, C.GOLD_LIGHT, C.GOLD_DARK})
-ring1Grad.Parent = ring1Stroke
-
-local ring2 = Instance.new("Frame")
-ring2.Size = UDim2.new(0, 300, 0, 300)
-ring2.Position = UDim2.new(0.5, -150, 0.5, -150)
-ring2.BackgroundTransparency = 1
-ring2.Parent = ringHolder
-rnd(ring2, 999)
-local ring2Stroke = Instance.new("UIStroke")
-ring2Stroke.Thickness = 3
-ring2Stroke.Color = C.ORANGE
-ring2Stroke.Transparency = 0.4
-ring2Stroke.Parent = ring2
-local ring2Grad = Instance.new("UIGradient")
-ring2Grad.Color = ColorSequence.new({C.ORANGE, C.GOLD, C.GOLD_LIGHT})
-ring2Grad.Parent = ring2Stroke
-
-local ring3 = Instance.new("Frame")
-ring3.Size = UDim2.new(0, 200, 0, 200)
-ring3.Position = UDim2.new(0.5, -100, 0.5, -100)
-ring3.BackgroundTransparency = 1
-ring3.Parent = ringHolder
-rnd(ring3, 999)
-local ring3Stroke = Instance.new("UIStroke")
-ring3Stroke.Thickness = 2
-ring3Stroke.Color = C.FIRE_BRIGHT
-ring3Stroke.Transparency = 0.5
-ring3Stroke.Parent = ring3
+nebulaGrad.Rotation = 45
+nebulaGrad.Parent = nebula
 
 task.spawn(function()
     local t = 0
-    while ringHolder.Parent do
-        t = t + 0.03
-        ring1.Rotation = t * 45
-        ring2.Rotation = -t * 60
-        ring3.Rotation = t * 90
-        ring1Grad.Rotation = t * 100
-        ring2Grad.Rotation = -t * 120
-        task.wait(0.03)
+    while nebula.Parent do
+        t = t + 0.005
+        nebulaGrad.Rotation = (t * 20) % 360
+        task.wait(0.08)
     end
 end)
 
--- PARTIKEL EXPLOSION
-local particleHolder = Instance.new("Frame")
-particleHolder.Size = UDim2.new(0, 500, 0, 500)
-particleHolder.Position = UDim2.new(0.5, -250, 0.5, -250)
-particleHolder.BackgroundTransparency = 1
-particleHolder.Parent = bg
+local starContainer = Instance.new("Frame")
+starContainer.Size = UDim2.new(1, 0, 1, 0)
+starContainer.BackgroundTransparency = 1
+starContainer.Parent = bg
 
-local particles = {}
-for i = 1, 30 do
-    local particle = Instance.new("Frame")
-    particle.Size = UDim2.new(0, math.random(4, 10), 0, math.random(4, 10))
-    particle.Position = UDim2.new(0.5, 0, 0.5, 0)
-    particle.BackgroundColor3 = Color3.fromRGB(255, math.random(180, 240), math.random(60, 120))
-    particle.BorderSizePixel = 0
-    particle.BackgroundTransparency = 0.1
-    particle.Parent = particleHolder
-    rnd(particle, 999)
-    table.insert(particles, {
-        obj = particle,
-        angle = (i / 30) * math.pi * 2,
-        speed = math.random(80, 250) / 100,
-        distance = 0,
-        delay = math.random(1, 50) / 100,
+local stars = {}
+for i = 1, 20 do
+    local star = Instance.new("Frame")
+    star.Size = UDim2.new(0, math.random(2, 4), 0, math.random(2, 4))
+    star.Position = UDim2.new(math.random(), 0, math.random(), 0)
+    star.BackgroundColor3 = Color3.fromRGB(math.random(220, 255), math.random(180, 220), math.random(80, 150))
+    star.BorderSizePixel = 0
+    star.BackgroundTransparency = math.random(20, 60) / 100
+    star.Parent = starContainer
+    rnd(star, 999)
+    table.insert(stars, {
+        obj = star,
+        speed = math.random(10, 40) / 10000,
+        twinkle = math.random() * math.pi * 2
     })
 end
 
 task.spawn(function()
-    task.wait(0.5)
-    local t = 0
-    while particleHolder.Parent do
-        t = t + 0.02
-        for _, p in ipairs(particles) do
-            if p.obj and p.obj.Parent and t > p.delay then
-                p.distance = p.distance + p.speed
-                local x = math.cos(p.angle) * p.distance
-                local y = math.sin(p.angle) * p.distance
-                p.obj.Position = UDim2.new(0.5, x, 0.5, y)
-                p.obj.BackgroundTransparency = math.min(1, p.distance / 300)
-                local sz = math.max(0, 10 - p.distance / 30)
-                p.obj.Size = UDim2.new(0, sz, 0, sz)
+    while starContainer.Parent do
+        for _, s in ipairs(stars) do
+            if s.obj and s.obj.Parent then
+                local p = s.obj.Position
+                local newY = p.Y.Scale + s.speed
+                if newY > 1 then
+                    newY = 0
+                    s.obj.Position = UDim2.new(math.random(), 0, 0, 0)
+                else
+                    s.obj.Position = UDim2.new(p.X.Scale, 0, newY, 0)
+                end
+                s.twinkle = s.twinkle + 0.1
+                s.obj.BackgroundTransparency = 0.4 + math.sin(s.twinkle) * 0.3
             end
         end
-        task.wait(0.02)
+        task.wait(0.12)
     end
 end)
 
--- TEXT "ONE W" ZOOM BURST
-local titleHolder = Instance.new("Frame")
-titleHolder.Size = UDim2.new(1, 0, 0, 150)
-titleHolder.Position = UDim2.new(0, 0, 0.5, -75)
-titleHolder.BackgroundTransparency = 1
-titleHolder.Parent = bg
+local galaxyHolder = Instance.new("Frame")
+galaxyHolder.Size = UDim2.new(0, 400, 0, 400)
+galaxyHolder.Position = UDim2.new(0.5, -200, 0.5, -200)
+galaxyHolder.BackgroundTransparency = 1
+galaxyHolder.Parent = bg
+
+local spiral1 = Instance.new("Frame")
+spiral1.Size = UDim2.new(0, 300, 0, 300)
+spiral1.Position = UDim2.new(0.5, -150, 0.5, -150)
+spiral1.BackgroundTransparency = 1
+spiral1.Parent = galaxyHolder
+
+local spiral1Stroke = Instance.new("UIStroke")
+spiral1Stroke.Thickness = 60
+spiral1Stroke.Transparency = 0.85
+spiral1Stroke.Color = Color3.fromRGB(255, 210, 80)
+spiral1Stroke.Parent = spiral1
+rnd(spiral1, 999)
+
+local spiral1Grad = Instance.new("UIGradient")
+spiral1Grad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 180, 60)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 210, 80)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 240, 160)),
+})
+spiral1Grad.Parent = spiral1Stroke
+
+local spiral2 = Instance.new("Frame")
+spiral2.Size = UDim2.new(0, 260, 0, 260)
+spiral2.Position = UDim2.new(0.5, -130, 0.5, -130)
+spiral2.BackgroundTransparency = 1
+spiral2.Parent = galaxyHolder
+
+local spiral2Stroke = Instance.new("UIStroke")
+spiral2Stroke.Thickness = 40
+spiral2Stroke.Transparency = 0.88
+spiral2Stroke.Color = Color3.fromRGB(255, 240, 160)
+spiral2Stroke.Parent = spiral2
+rnd(spiral2, 999)
+
+local spiral2Grad = Instance.new("UIGradient")
+spiral2Grad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 240, 160)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 180, 60)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 210, 80)),
+})
+spiral2Grad.Rotation = 180
+spiral2Grad.Parent = spiral2Stroke
+
+task.spawn(function()
+    local t = 0
+    while galaxyHolder.Parent do
+        t = t + 1
+        spiral1.Rotation = t * 0.8
+        spiral2.Rotation = -t * 1.1
+        spiral1Grad.Rotation = (t * 2) % 360
+        spiral2Grad.Rotation = 180 + (t * 1.5) % 360
+        task.wait(0.08)
+    end
+end)
+
+local titleGlow = Instance.new("Frame")
+titleGlow.Size = UDim2.new(0, 500, 0, 100)
+titleGlow.Position = UDim2.new(0.5, -250, 0.42, -50)
+titleGlow.BackgroundColor3 = Color3.fromRGB(255, 210, 80)
+titleGlow.BackgroundTransparency = 0.85
+titleGlow.BorderSizePixel = 0
+titleGlow.Parent = bg
+rnd(titleGlow, 999)
+
+local glowGrad = Instance.new("UIGradient")
+glowGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 180, 60)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 210, 80)),
+})
+glowGrad.Parent = titleGlow
 
 local welcomeTitle = Instance.new("TextLabel")
-welcomeTitle.Size = UDim2.new(1, 0, 1, 0)
+welcomeTitle.Size = UDim2.new(1, 0, 0, 90)
+welcomeTitle.Position = UDim2.new(0, 0, 0.42, -20)
 welcomeTitle.BackgroundTransparency = 1
 welcomeTitle.Text = "ONE W"
 welcomeTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-welcomeTitle.TextSize = 100
+welcomeTitle.TextSize = 0
 welcomeTitle.Font = Enum.Font.GothamBlack
-welcomeTitle.TextStrokeTransparency = 0.3
-welcomeTitle.TextStrokeColor3 = C.GOLD
-welcomeTitle.TextTransparency = 1
-welcomeTitle.Parent = titleHolder
+welcomeTitle.TextStrokeTransparency = 0.4
+welcomeTitle.TextStrokeColor3 = Color3.fromRGB(255, 210, 80)
+welcomeTitle.Parent = bg
 
 local titleGrad = Instance.new("UIGradient")
 titleGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.0, C.GOLD_LIGHT),
-    ColorSequenceKeypoint.new(0.25, C.GOLD),
-    ColorSequenceKeypoint.new(0.5, C.ORANGE),
-    ColorSequenceKeypoint.new(0.75, C.GOLD),
-    ColorSequenceKeypoint.new(1.0, C.GOLD_LIGHT),
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 240, 160)),
+    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 210, 80)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 180, 60)),
+    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 210, 80)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 240, 160)),
 })
 titleGrad.Parent = welcomeTitle
 
-local glitchText = welcomeTitle:Clone()
-glitchText.TextColor3 = C.RED
-glitchText.TextStrokeColor3 = Color3.fromRGB(255, 0, 100)
-glitchText.TextTransparency = 1
-glitchText.Parent = titleHolder
+task.spawn(function()
+    local t = 0
+    while welcomeTitle.Parent do
+        t = t + 1
+        titleGrad.Rotation = (t * 2) % 360
+        task.wait(0.08)
+    end
+end)
 
-local glitchText2 = welcomeTitle:Clone()
-glitchText2.TextColor3 = C.CYAN
-glitchText2.TextStrokeColor3 = Color3.fromRGB(0, 200, 255)
-glitchText2.TextTransparency = 1
-glitchText2.Parent = titleHolder
+TweenService:Create(welcomeTitle, TweenInfo.new(1.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+    TextSize = 68,
+    TextTransparency = 0
+}):Play()
+
+task.spawn(function()
+    task.wait(1.2)
+    while titleGlow.Parent do
+        TweenService:Create(titleGlow, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            BackgroundTransparency = 0.6,
+            Size = UDim2.new(0, 560, 0, 120),
+            Position = UDim2.new(0.5, -280, 0.42, -60)
+        }):Play()
+        task.wait(1.3)
+        TweenService:Create(titleGlow, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            BackgroundTransparency = 0.85,
+            Size = UDim2.new(0, 500, 0, 100),
+            Position = UDim2.new(0.5, -250, 0.42, -50)
+        }):Play()
+        task.wait(1.3)
+    end
+end)
+
+local subtitle = Instance.new("TextLabel")
+subtitle.Size = UDim2.new(1, 0, 0, 24)
+subtitle.Position = UDim2.new(0, 0, 0.42, 70)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "L O A D I N G"
+subtitle.TextColor3 = Color3.fromRGB(255, 230, 160)
+subtitle.TextSize = 14
+subtitle.Font = Enum.Font.GothamBold
+subtitle.TextStrokeTransparency = 0.5
+subtitle.TextStrokeColor3 = Color3.fromRGB(180, 120, 20)
+subtitle.TextTransparency = 1
+subtitle.Parent = bg
+
+TweenService:Create(subtitle, TweenInfo.new(1), {TextTransparency = 0}):Play()
 
 task.spawn(function()
     task.wait(1)
-    local t = 0
-    while welcomeTitle.Parent do
-        t = t + 0.03
-        titleGrad.Rotation = (t * 30) % 360
-        task.wait(0.03)
+    while subtitle.Parent do
+        TweenService:Create(subtitle, TweenInfo.new(0.8), {TextTransparency = 0.4}):Play()
+        task.wait(0.9)
+        TweenService:Create(subtitle, TweenInfo.new(0.8), {TextTransparency = 0}):Play()
+        task.wait(0.9)
     end
 end)
-
-task.spawn(function()
-    task.wait(0.8)
-    welcomeTitle.TextSize = 20
-    TweenService:Create(welcomeTitle, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        TextTransparency = 0,
-        TextSize = 110
-    }):Play()
-
-    task.wait(0.5)
-    for i = 1, 8 do
-        glitchText.Position = UDim2.new(0, math.random(-15, 15), 0, math.random(-8, 8))
-        glitchText2.Position = UDim2.new(0, math.random(-15, 15), 0, math.random(-8, 8))
-        glitchText.TextTransparency = 0.4
-        glitchText2.TextTransparency = 0.4
-        task.wait(0.04)
-        glitchText.TextTransparency = 1
-        glitchText2.TextTransparency = 1
-        task.wait(0.04)
-    end
-
-    TweenService:Create(welcomeTitle, TweenInfo.new(0.3), {
-        TextSize = 90
-    }):Play()
-end)
-
--- COUNTER + BAR
-local counterLabel = Instance.new("TextLabel")
-counterLabel.Size = UDim2.new(1, 0, 0, 40)
-counterLabel.Position = UDim2.new(0, 0, 0.5, 90)
-counterLabel.BackgroundTransparency = 1
-counterLabel.Text = "0%"
-counterLabel.TextColor3 = C.GOLD
-counterLabel.TextSize = 24
-counterLabel.Font = Enum.Font.GothamBlack
-counterLabel.TextStrokeTransparency = 0.4
-counterLabel.TextStrokeColor3 = C.GOLD_DARK
-counterLabel.TextTransparency = 1
-counterLabel.Parent = bg
 
 local barBg = Instance.new("Frame")
-barBg.Size = UDim2.new(0, 400, 0, 6)
-barBg.Position = UDim2.new(0.5, -200, 0.5, 140)
+barBg.Size = UDim2.new(0, 320, 0, 4)
+barBg.Position = UDim2.new(0.5, -160, 0.42, 110)
 barBg.BackgroundColor3 = Color3.fromRGB(50, 35, 10)
 barBg.BorderSizePixel = 0
-barBg.BackgroundTransparency = 0.5
+barBg.BackgroundTransparency = 0.4
 barBg.Parent = bg
 rnd(barBg, 999)
 
 local barFill = Instance.new("Frame")
 barFill.Size = UDim2.new(0, 0, 1, 0)
-barFill.BackgroundColor3 = C.GOLD
+barFill.BackgroundColor3 = Color3.fromRGB(255, 210, 80)
 barFill.BorderSizePixel = 0
 barFill.Parent = barBg
 rnd(barFill, 999)
 
 local barFillGrad = Instance.new("UIGradient")
-barFillGrad.Color = ColorSequence.new({C.GOLD, C.FIRE_BRIGHT, C.GOLD_LIGHT})
+barFillGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 180, 60)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 240, 160)),
+    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(255, 210, 80)),
+})
 barFillGrad.Parent = barFill
 
+TweenService:Create(barFill, TweenInfo.new(1.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    Size = UDim2.new(1, 0, 1, 0)
+}):Play()
+
 local barGlow = Instance.new("Frame")
-barGlow.Size = UDim2.new(1, 16, 2, 16)
-barGlow.Position = UDim2.new(0, -8, 0, -8)
-barGlow.BackgroundColor3 = C.GOLD
-barGlow.BackgroundTransparency = 0.5
+barGlow.Size = UDim2.new(1, 12, 2, 12)
+barGlow.Position = UDim2.new(0, -6, 0, -6)
+barGlow.BackgroundColor3 = Color3.fromRGB(255, 210, 80)
+barGlow.BackgroundTransparency = 0.7
 barGlow.BorderSizePixel = 0
 barGlow.ZIndex = -1
 barGlow.Parent = barBg
 rnd(barGlow, 999)
 
-task.spawn(function()
-    task.wait(0.8)
-    TweenService:Create(counterLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-    for i = 0, 100, 2 do
-        counterLabel.Text = i .. "%"
-        barFill.Size = UDim2.new(i / 100, 0, 1, 0)
-        task.wait(0.018)
-    end
-    counterLabel.Text = "100%"
-end)
-
--- SHOCKWAVE + FLASH FINAL
-task.spawn(function()
-    task.wait(2.8)
-    local shockwave = Instance.new("Frame")
-    shockwave.Size = UDim2.new(0, 100, 0, 100)
-    shockwave.Position = UDim2.new(0.5, -50, 0.5, -50)
-    shockwave.BackgroundTransparency = 1
-    shockwave.Parent = bg
-    rnd(shockwave, 999)
-    local swStroke = Instance.new("UIStroke")
-    swStroke.Thickness = 6
-    swStroke.Color = C.FIRE_BRIGHT
-    swStroke.Transparency = 0.1
-    swStroke.Parent = shockwave
-    TweenService:Create(shockwave, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-        Size = UDim2.new(0, 1500, 0, 1500),
-        Position = UDim2.new(0.5, -750, 0.5, -750)
-    }):Play()
-    TweenService:Create(swStroke, TweenInfo.new(0.6), {
-        Transparency = 1,
-        Thickness = 1
-    }):Play()
-
-    local flash = Instance.new("Frame")
-    flash.Size = UDim2.new(1, 0, 1, 0)
-    flash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    flash.BackgroundTransparency = 1
-    flash.BorderSizePixel = 0
-    flash.ZIndex = 999999
-    flash.Parent = bg
-    task.wait(0.3)
-    TweenService:Create(flash, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play()
-    task.wait(0.15)
-    TweenService:Create(flash, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
-end)
-
-task.delay(3.5, function()
+task.delay(1.6, function()
+    if not loadingGui then return end
     if bg and bg.Parent then
-        TweenService:Create(bg, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-            BackgroundTransparency = 1
-        }):Play()
-        task.wait(0.7)
-        if loadingGui then loadingGui:Destroy() end
+        TweenService:Create(bg, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {BackgroundTransparency = 1}):Play()
     end
+    if welcomeTitle and welcomeTitle.Parent then
+        TweenService:Create(welcomeTitle, TweenInfo.new(0.5), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
+    end
+    if subtitle and subtitle.Parent then
+        TweenService:Create(subtitle, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+    end
+    if nebula and nebula.Parent then
+        TweenService:Create(nebula, TweenInfo.new(0.6), {BackgroundTransparency = 1}):Play()
+    end
+    if titleGlow and titleGlow.Parent then
+        TweenService:Create(titleGlow, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+    end
+    if barBg and barBg.Parent then
+        TweenService:Create(barBg, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+    end
+    if barGlow and barGlow.Parent then
+        TweenService:Create(barGlow, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+    end
+    task.wait(0.8)
+    if loadingGui then loadingGui:Destroy() end
 end)
 
 -- =========================================================
@@ -510,7 +500,7 @@ Aimlock = _G.RoooorAimlock or {
 }
 _G.RoooorAimlock = Aimlock
 
-print("✅ [1/15] ONE W - Loading Energy + State Loaded (GOLD)")-- =========================================================
+print("✅ [1/15] ONE W - Loading Galaxy + State Loaded (GOLD)")-- =========================================================
 -- SECTION 2/15 : FIRE CONFIG + SKY + KILLER ANIMS + GRAFIK PRESETS
 -- =========================================================
 
